@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/nicholaslogan255/liri-node-app#readme",
   "dependencies": {
-    "inquirer": "^6.0.0"
+    "inquirer": "^6.0.0",
+    "request": "^2.87.0"
   }
 }
