@@ -13,11 +13,11 @@ let spotify = new Spotify(keys.spotify);
 let client = new Twitter(keys.twitter);
 
 let searchTerm;
-if(process.argv[3] != null){
-// combine all user arguments after the first one into one string
- searchTerm = process.argv.splice(3).join(" ");
+if (process.argv[3] != null) {
+    // combine all user arguments after the first one into one string
+    searchTerm = process.argv.splice(3).join(" ");
 }
-else{
+else {
     console.log("NOTICE: No search term | Using default values when applicable.");
 }
 
@@ -29,7 +29,7 @@ interpret(process.argv[2], searchTerm);
 //  function exists for possible recursive call in do-what-it-says
 function interpret(searchCommand, searchValue) {
 
-    console.log("Search Value: ",searchValue);
+    console.log("Search Value: ", searchValue);
 
     // determine if first element is one of the predefined commands
     switch (searchCommand) {
@@ -39,11 +39,13 @@ function interpret(searchCommand, searchValue) {
             let numTweetsToFind = 20;
 
             // if user entered a number argument after 'my-tweets', update numTweetsToFind to argument
-            if (searchValue != null && !isNaN(searchValue) ){
+            if (searchValue != null && !isNaN(searchValue)) {
                 numTweetsToFind = searchValue;
             }
 
-            findTweets(numTweetsToFind);
+
+            // searches for the tweets
+            findTweets();
 
             break;
         case "spotify-this-song":
@@ -52,13 +54,13 @@ function interpret(searchCommand, searchValue) {
             let songToSearch = "The Sign  Ace of Base";
 
             // if user entered song argument after 'spotify-this-song'...
-            if (searchValue != null ) {
+            if (searchValue != null) {
                 //console.log("NOT DEFAULT ANYMORE ... BRO");
                 songToSearch = searchValue;
             }
 
             console.log("Searching for: ", songToSearch);
-            findSong(songToSearch);               
+            findSong(songToSearch);
 
             break;
         case "movie-this":
@@ -81,10 +83,10 @@ function interpret(searchCommand, searchValue) {
                     let instructArr = data.split(",");
 
                     // if the first value is not the read from a file instruction (to avoid infinite loop)
-                   if(instructArr[0] != "do-what-it-says"){
-                    // run the liri search on the file contents
-                    interpret(instructArr[0], instructArr[1]);
-                   }
+                    if (instructArr[0] != "do-what-it-says") {
+                        // run the liri search on the file contents
+                        interpret(instructArr[0], instructArr[1]);
+                    }
 
                 }
             });
@@ -120,8 +122,20 @@ function findMovie(movieSearch) {
     });
 }
 
-// TODO: implement twitter api
+
 function findTweets() {
+
+    var params = { screen_name: 'DeveloperNic' };
+    client.get('statuses/user_timeline', params, function (error, tweets, response) {
+        if (!error) {
+
+
+            for(var i in tweets){
+                console.log(tweets[i].text);
+            }
+            
+        }
+    });
 
 }
 
@@ -133,7 +147,7 @@ function findSong(songSearch) {
         if (err) {
             return console.log('Error occurred: ' + err);
         }
-      
+
         console.log("--------------------------------");
         console.log("Album: ", JSON.stringify(data.tracks.items[0].album.name));
         console.log("Release Date: ", JSON.stringify(data.tracks.items[0].album.release_date));
