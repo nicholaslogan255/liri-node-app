@@ -122,13 +122,14 @@ function findSong(songSearch) {
         if (err) {
             return console.log('Error occurred: ' + err);
         }
-        console.log(data);
-        console.log("--------------------------------");
-        console.log(data.tracks.items[0]);
+      
         console.log("--------------------------------");
     
-        console.log("Album: ", JSON.stringify(data.tracks.items[0].album));
-        console.log("release: ", JSON.stringify(data.tracks.items[0].release_date));
+        console.log("Album: ", JSON.stringify(data.tracks.items[0].album.name));
+        console.log("Release Date: ", JSON.stringify(data.tracks.items[0].album.release_date));
+        console.log("Song Name: ", JSON.stringify(data.tracks.items[0].name));
+        console.log("Artist(s): ", JSON.stringify(data.tracks.items[0].album.artists[0].name));
+        console.log("Preview URL: ", JSON.stringify(data.tracks.items[0].preview_url));
     });
 
 }
