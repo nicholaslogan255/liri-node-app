@@ -9,11 +9,14 @@ require('dotenv').config()
 // create instances of spotify and twitter objects with keys loaded in from the keys.js file
 // TODO update keys.js with working keys
 let keys = require("./keys.js");
-// let spotify = new Spotify(keys.spotify);
-// let client = new Twitter(keys.twitter);
+let spotify = new Spotify(keys.spotify);
+let client = new Twitter(keys.twitter);
+
+// combine all user arguments after the first one into one string
+let searchTerm = process.argv.splice(3).join(" ");
 
 // interpret the first two user arguments and return the desired result
-interpret(process.argv[2], process.argv[3]);
+interpret(process.argv[2], searchTerm);
 
 //  a function that takes in a possible command & search term and returns corresponding data
 //  function exists for possible recursive call in do-what-it-says
@@ -44,11 +47,8 @@ function interpret(searchCommand, searchValue) {
                 songToSearch = searchValue;
             }
 
-            findSong(songToSearch);
-
-
-            console.log("Searching for: " + songToSearch);
-            console.log("Search failed | Code not currently implemented ");
+            console.log("Searching for: ", songToSearch);
+            findSong(songToSearch);               
 
             break;
         case "movie-this":
@@ -115,15 +115,20 @@ function findTweets() {
 }
 
 // gets the song from the spotify api
-// TODO: implement module correctly
+
 function findSong(songSearch) {
 
     spotify.search({ type: 'track', query: songSearch }, function (err, data) {
         if (err) {
             return console.log('Error occurred: ' + err);
         }
-
         console.log(data);
+        console.log("--------------------------------");
+        console.log(data.tracks.items[0]);
+        console.log("--------------------------------");
+    
+        console.log("Album: ", JSON.stringify(data.tracks.items[0].album));
+        console.log("release: ", JSON.stringify(data.tracks.items[0].release_date));
     });
 
 }
