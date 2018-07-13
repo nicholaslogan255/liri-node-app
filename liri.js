@@ -12,8 +12,15 @@ let keys = require("./keys.js");
 let spotify = new Spotify(keys.spotify);
 let client = new Twitter(keys.twitter);
 
+let searchTerm;
+if(process.argv[3] != null){
 // combine all user arguments after the first one into one string
-let searchTerm = process.argv.splice(3).join(" ");
+ searchTerm = process.argv.splice(3).join(" ");
+}
+else{
+    console.log("NOTICE: No search term | Using default values when applicable.");
+}
+
 
 // interpret the first two user arguments and return the desired result
 interpret(process.argv[2], searchTerm);
@@ -21,6 +28,8 @@ interpret(process.argv[2], searchTerm);
 //  a function that takes in a possible command & search term and returns corresponding data
 //  function exists for possible recursive call in do-what-it-says
 function interpret(searchCommand, searchValue) {
+
+    console.log("Search Value: ",searchValue);
 
     // determine if first element is one of the predefined commands
     switch (searchCommand) {
@@ -40,10 +49,11 @@ function interpret(searchCommand, searchValue) {
         case "spotify-this-song":
             console.log("Running spotify-this-song");
 
-            let songToSearch = "The Sign";
+            let songToSearch = "The Sign  Ace of Base";
 
             // if user entered song argument after 'spotify-this-song'...
-            if (searchValue != null) {
+            if (searchValue != null ) {
+                //console.log("NOT DEFAULT ANYMORE ... BRO");
                 songToSearch = searchValue;
             }
 
@@ -96,6 +106,7 @@ function findMovie(movieSearch) {
         // If the request is successful (i.e. if the response status code is 200)
         if (!error && response.statusCode === 200) {
 
+            console.log("--------------------------------");
             // Log the important statistics about the movie
             console.log("The movie's title is: " + JSON.parse(body).Title);
             console.log("The movie's release year is: " + JSON.parse(body).Year);
@@ -124,7 +135,6 @@ function findSong(songSearch) {
         }
       
         console.log("--------------------------------");
-    
         console.log("Album: ", JSON.stringify(data.tracks.items[0].album.name));
         console.log("Release Date: ", JSON.stringify(data.tracks.items[0].album.release_date));
         console.log("Song Name: ", JSON.stringify(data.tracks.items[0].name));
