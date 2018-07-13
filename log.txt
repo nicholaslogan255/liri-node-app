@@ -1,0 +1,18 @@
+Running movie-this
+--------------------------------
+The movie's release year is: 2004
+The movie's imbd rating is: 6.0
+The movie's rotton tomatoes rating is: 47/100
+The movie's country of origin is: USA
+The movie's language is: English, Spanish
+The movie's plot is: 
+Based on the 1836 standoff between a group of Texan and Tejano men, led by Davy Crockett and Jim Bowie, and Mexican dictator Santa Anna's forces at the Alamo in San Antonio Tezas
+The movie's actors are: Dennis Quaid, Billy Bob Thornton, Jason Patric, Patrick Wilson
+The movie's title is: The Alamo
+Running spotify-this-song
+--------------------------------
+Album: "The Essential Billy Joel"
+Song Name: "It's Still Rock and Roll to Me"
+Release Date: "2001-10-02"
+Artist(s): "Billy Joel"
+Preview URL: "https://p.scdn.co/mp3-preview/b1b2c1187be4deac0d38c71ece4a466501a321b4?cid=eaccc82b629d480a882277ca354200b4"

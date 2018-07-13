@@ -17,10 +17,9 @@ if (process.argv[3] != null) {
     // combine all user arguments after the first one into one string
     searchTerm = process.argv.splice(3).join(" ");
 }
-else {
-    console.log("NOTICE: No search term | Using default values when applicable.");
-}
-
+// else {
+//     console.log("NOTICE: No search term | Using default values when applicable.");
+// }
 
 // interpret the first two user arguments and return the desired result
 interpret(process.argv[2], searchTerm);
@@ -29,34 +28,31 @@ interpret(process.argv[2], searchTerm);
 //  function exists for possible recursive call in do-what-it-says
 function interpret(searchCommand, searchValue) {
 
-    console.log("Search Value: ", searchValue);
-
     // determine if first element is one of the predefined commands
     switch (searchCommand) {
         case "my-tweets":
-            console.log("Running my-tweets");
+            LOG("Running my-tweets");
 
-            let numTweetsToFind = 20;
+            // let numTweetsToFind = 20;
 
             // if user entered a number argument after 'my-tweets', update numTweetsToFind to argument
-            if (searchValue != null && !isNaN(searchValue)) {
-                numTweetsToFind = searchValue;
-            }
-
+            // if (searchValue != null && !isNaN(searchValue)) {
+            //     numTweetsToFind = searchValue;
+            // }
 
             // searches for the tweets
             findTweets();
 
             break;
         case "spotify-this-song":
-            console.log("Running spotify-this-song");
+            LOG("Running spotify-this-song");
 
             let songToSearch = "The Sign  Ace of Base";
 
             // if user entered song argument after 'spotify-this-song'...
             if (searchValue != null) {
-                //console.log("NOT DEFAULT ANYMORE ... BRO");
-                songToSearch = searchValue;
+                
+                songToSearch = searchValue; // .. use that song instead of default
             }
 
             console.log("Searching for: ", songToSearch);
@@ -64,17 +60,18 @@ function interpret(searchCommand, searchValue) {
 
             break;
         case "movie-this":
-            //console.log("Running movie-this");
+            LOG("Running movie-this");
 
             let movieToSearch = "Mr. Nobody"; // default movie
 
-            // if user argument exists for movie, search for that to search for movies
+            // if user argument exists for movie, search for that to movie instead of default
             if (searchValue != null) { movieToSearch = searchValue }
+            console.log("Searching for: ", movieToSearch);
 
-            findMovie(movieToSearch);
+            findMovie(movieToSearch); // search for the movie
             break;
         case "do-what-it-says":
-            console.log("Running do-what-it-says");
+            LOG("Running do-what-it-says");
 
             // pull instruction from the random.txt
             fs.readFile("random.txt", "utf8", function (err, data) {
@@ -108,16 +105,16 @@ function findMovie(movieSearch) {
         // If the request is successful (i.e. if the response status code is 200)
         if (!error && response.statusCode === 200) {
 
-            console.log("--------------------------------");
-            // Log the important statistics about the movie
-            console.log("The movie's title is: " + JSON.parse(body).Title);
-            console.log("The movie's release year is: " + JSON.parse(body).Year);
-            console.log("The movie's imbd rating is: " + JSON.parse(body).imdbRating);
-            console.log("The movie's rotton tomatoes rating is: " + JSON.parse(body).Ratings[1].Value);
-            console.log("The movie's country of origin is: " + JSON.parse(body).Country);
-            console.log("The movie's language is: " + JSON.parse(body).Language);
-            console.log("The movie's plot is: \n" + JSON.parse(body).Plot);
-            console.log("The movie's actors are: " + JSON.parse(body).Actors);
+            // Log the results (custom log function will log to both console and log.txt file)
+            LOG("--------------------------------");
+            LOG("The movie's title is: " + JSON.parse(body).Title);
+            LOG("The movie's release year is: " + JSON.parse(body).Year);
+            LOG("The movie's imbd rating is: " + JSON.parse(body).imdbRating);
+            LOG("The movie's rotton tomatoes rating is: " + JSON.parse(body).Ratings[1].Value);
+            LOG("The movie's country of origin is: " + JSON.parse(body).Country);
+            LOG("The movie's language is: " + JSON.parse(body).Language);
+            LOG("The movie's plot is: \n" + JSON.parse(body).Plot);
+            LOG("The movie's actors are: " + JSON.parse(body).Actors);
         }
     });
 }
@@ -129,9 +126,12 @@ function findTweets() {
     client.get('statuses/user_timeline', params, function (error, tweets, response) {
         if (!error) {
 
+            // Log the results (custom log function will log to both console and log.txt file)
+            LOG("--------------------------------");
 
+            // log the tweets
             for(var i in tweets){
-                console.log(tweets[i].text);
+                LOG(tweets[i].text);
             }
             
         }
@@ -140,7 +140,6 @@ function findTweets() {
 }
 
 // gets the song from the spotify api
-
 function findSong(songSearch) {
 
     spotify.search({ type: 'track', query: songSearch }, function (err, data) {
@@ -148,12 +147,31 @@ function findSong(songSearch) {
             return console.log('Error occurred: ' + err);
         }
 
-        console.log("--------------------------------");
-        console.log("Album: ", JSON.stringify(data.tracks.items[0].album.name));
-        console.log("Release Date: ", JSON.stringify(data.tracks.items[0].album.release_date));
-        console.log("Song Name: ", JSON.stringify(data.tracks.items[0].name));
-        console.log("Artist(s): ", JSON.stringify(data.tracks.items[0].album.artists[0].name));
-        console.log("Preview URL: ", JSON.stringify(data.tracks.items[0].preview_url));
+        // Log the results (custom log function will log to both console and log.txt file)
+        LOG("--------------------------------");
+        LOG("Album: "+ JSON.stringify(data.tracks.items[0].album.name));
+        LOG("Release Date: "+ JSON.stringify(data.tracks.items[0].album.release_date));
+        LOG("Song Name: "+ JSON.stringify(data.tracks.items[0].name));
+        LOG("Artist(s): "+ JSON.stringify(data.tracks.items[0].album.artists[0].name));
+        LOG("Preview URL: "+ JSON.stringify(data.tracks.items[0].preview_url));
+    });
+
+}
+
+// create function that logs important info to the terminal and to the log.txt file
+function LOG(stringToLog){
+
+    console.log(stringToLog); // log the traditional way (lame)
+
+    let formattedStr = stringToLog + "\n"
+
+    // append formmated string to the log.txt file  (it will be in the current folder) {Cool!}
+    fs.appendFile("log.txt", formattedStr, function (err) {
+
+        // If the code experiences any errors it will log the error to the console.
+        if (err) {
+            return console.log(err);
+        }
     });
 
 }
